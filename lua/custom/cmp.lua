@@ -1,10 +1,12 @@
-local ok, cmp = pcall(require, "cmp")
+local ok, cmp, luasnip
+
+ok, cmp = pcall(require, "cmp")
 if not ok then
   vim.notify("cmp not found\nInstall hrsh7th/nvim-cmp\n")
   return
 end
 
-local ok, luasnip = pcall(require, "luasnip")
+ok, luasnip = pcall(require, "luasnip")
 if not ok then
   vim.notify("luasnip not found\nInstall L3MON4D3/LuaSnip\n")
   return
@@ -17,12 +19,12 @@ cmp.setup({
     end
   },
   sources = cmp.config.sources({
-    { name = 'nvim_lua' },
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' }
+    { name = "nvim_lua" },
+    { name = "nvim_lsp" },
+    { name = "luasnip" }
   }),
   mapping = cmp.mapping.preset.insert({
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    ["<C-e>"] = cmp.mapping.abort(),
+    ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
   }),
 })
