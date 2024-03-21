@@ -11,6 +11,22 @@ end
 
 local packer_bootstrap = ensure_packer()
 
+local plugins = {
+  { "wbthomason/packer.nvim" },
+  { "neovim/nvim-lspconfig" },
+  { "nvim-treesitter/nvim-treesitter",            build = ":TSUpdate" },
+  { "numToStr/Comment.nvim" },
+  { "nvim-telescope/telescope-file-browser.nvim", dependencies = { " nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" } },
+  { "morhetz/gruvbox" },
+  { "ggandor/leap.nvim" },
+  { "akinsho/toggleterm.nvim" },
+  { "nvim-lualine/lualine.nvim", dependencies = { "nvim-tree/nvim-web-devicons", lazy = true} },
+  { "hrsh7th/nvim-cmp"},
+  { "hrsh7th/cmp-nvim-lsp"},
+  { "L3MON4D3/LuaSnip"},
+  { "hrsh7th/cmp-nvim-lua"},
+}
+
 require("packer").startup(function(use)
   use "wbthomason/packer.nvim"
   use "neovim/nvim-lspconfig"
