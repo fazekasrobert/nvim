@@ -1,64 +1,57 @@
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
-end
-
-local packer_bootstrap = ensure_packer()
-
 local plugins = {
-  { "wbthomason/packer.nvim" },
   { "neovim/nvim-lspconfig" },
-  { "nvim-treesitter/nvim-treesitter",            build = ":TSUpdate" },
-  { "numToStr/Comment.nvim" },
-  { "nvim-telescope/telescope-file-browser.nvim", dependencies = { " nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" } },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate"
+  },
+  {
+    "numToStr/Comment.nvim",
+    lazy = false
+  },
+  {
+    "nvim-telescope/telescope-file-browser.nvim",
+    cdm = "Telescope file_browser",
+    dependencies = { { "nvim-telescope/telescope.nvim", lazy = true }, { "nvim-lua/plenary.nvim", lazy = true } }
+  },
   { "morhetz/gruvbox" },
   { "ggandor/leap.nvim" },
   { "akinsho/toggleterm.nvim" },
-  { "nvim-lualine/lualine.nvim", dependencies = { "nvim-tree/nvim-web-devicons", lazy = true} },
-  { "hrsh7th/nvim-cmp"},
-  { "hrsh7th/cmp-nvim-lsp"},
-  { "L3MON4D3/LuaSnip"},
-  { "hrsh7th/cmp-nvim-lua"},
+  {
+    'akinsho/bufferline.nvim',
+    dependencies = { "nvim-tree/nvim-web-devicons", lazy = true }
+  },
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons", lazy = true }
+  },
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons", lazy = true }
+  },
+  { "hrsh7th/nvim-cmp" },
+  { "hrsh7th/cmp-nvim-lsp" },
+  { "L3MON4D3/LuaSnip" },
+  { "hrsh7th/cmp-nvim-lua" },
 }
 
-require("packer").startup(function(use)
-  use "wbthomason/packer.nvim"
-  use "neovim/nvim-lspconfig"
-  use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
-  use "numToStr/Comment.nvim"
-  use {
-    "nvim-telescope/telescope-file-browser.nvim",
-    requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
-  }
-
-  use "morhetz/gruvbox"
-  use "ggandor/leap.nvim"
-  use "akinsho/toggleterm.nvim"
-
-  use {
-    "nvim-lualine/lualine.nvim",
-    requires = { "nvim-tree/nvim-web-devicons", opt = true }
-  }
-
-  use "hrsh7th/nvim-cmp"
-  use "hrsh7th/cmp-nvim-lsp"
-  use "L3MON4D3/LuaSnip"
-  use "hrsh7th/cmp-nvim-lua"
-
-  if packer_bootstrap then
-    require("packer").sync()
-  end
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
 end
-)
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup(plugins)
 
 require "nvim-treesitter.configs".setup {
-  ensure_installed = { "c", "cpp", "cmake", "bash", "go", "dockerfile", "python", "lua", "make" },
+  -- ensure_installed = { "c", "cpp", "cmake", "bash", "go", "dockerfile", "python", "lua", "make" },
+  sync_install = false,
   highlight = {
     enable = true
   }
@@ -69,6 +62,7 @@ require "Comment".setup()
 require "telescope".load_extension "file_browser"
 require "leap".create_default_mappings()
 require "toggleterm".setup()
+require("bufferline").setup()
 
 require "custom.lsp"
 require "custom.option"
